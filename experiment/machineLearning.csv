@@ -1,0 +1,5 @@
+mcq,choices,correct
+What is machine learning focused on?,a:Developing and studying statistical algorithms that can learn from data|b:Creating explicit instructions for tasks|c:Ignoring data and focusing on theoretical frameworks|d:Only applicable in computer vision,a
+Which field of study focuses on exploratory data analysis via unsupervised learning?,a:Machine learning|b:Natural language processing|c:Data mining|d:Predictive analytics,c
+What provides a framework for describing machine learning from a theoretical viewpoint?,a:Deep learning|b:Probably approximately correct (PAC) learning|c:Neural networks|d:Mathematical optimization,b
+In which field does machine learning find application in agriculture and medicine?,a:Computer vision|b:Natural language processing|c:Speech recognition|d:Email filtering,a
