@@ -19,7 +19,7 @@ with st.form("user_inputs"):
     uploaded_files = st.file_uploader("Choose a PDF/txt file")
 
     # Number of fields to generate
-    mcq_count = st.number_input("Enter the number of MCQs to generate", min_value=3, max_value=10, value=50)
+    mcq_count = st.number_input("Enter the number of MCQs to generate", min_value=3, max_value=10, value=8)
 
     # enter subject line
     subject=st.text_input("Enter the subject of the MCQs",max_chars=20)
