@@ -5,8 +5,10 @@ from langchain.callbacks import get_openai_callback
 from src.mcqgenerator.MCQGenerator import quiz_review_sequential_chain
 from src.mcqgenerator.logger import logging
 
+# command to run the application - streamlit run StreamlitAPP.py
+
 # loading json file
-with open('Response.json','r') as file:
+with open('/Users/alikanti/Documents/GenAI/mcqgen/Response.json','r') as file:
     RESPONSE_JSON=json.load(file)
 
 # Create title for the APP.
@@ -53,16 +55,27 @@ with st.form("user_inputs"):
                 print(f"Completion tokens: {cb.completion_tokens}")
                 print(f"Total Cost: {cb.total_cost}")
                 if isinstance(response, dict):
-                    quiz=response.get("quiz", None)
+                    quiz = response.get("quiz", None)
                     if quiz is not None:
-                        table_data=get_table_data(quiz)
-                        if table_data is not None:
-                            df=pd.DataFrame(table_data)
-                            df.index=df.index+1
-                            st.table(df)
-                            st.text_area(label="Review", value=response["review"])
-                        else:
-                            st.error("Error in the table data")
-                    
+                        try:
+                            print(f"Raw quiz data before cleaning: {quiz}")
+                            if isinstance(quiz, str) and quiz.startswith("### RESPONSE_JSON"):
+                                quiz = quiz.replace("### RESPONSE_JSON", "").strip()
+                            print(f"Cleaned quiz data: {quiz}")
+
+                            table_data = get_table_data(quiz)
+
+                            if table_data:
+                                df = pd.DataFrame(table_data).T  # Transpose so each question is a row
+                                df.reset_index(drop=True, inplace=True)  # Ensure index is numeric
+                                df.index = df.index + 1  # Increment index by 1
+                                st.table(df)
+                                st.text_area(label="Review", value=response.get("review", ""))
+                            else:
+                                st.error("Table data is empty.")
+                        except ValueError as e:
+                            st.error(f"Error processing quiz data: {e}")
+                    else:
+                        st.error("Quiz data is not available.")
                 else:
-                    st.write(response)
+                    st.error("Invalid response format.")

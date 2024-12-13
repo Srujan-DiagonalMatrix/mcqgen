@@ -4,9 +4,9 @@ import json
 import traceback
 
 def read_file(file):
-    if file.endswith('.pdf'):
+    if file.name.endswith('.pdf'):
         try:
-            pdf_reader=PyPDF2.PdfFileReader(file)
+            pdf_reader=PyPDF2.PdfReader(file)
             text=""
 
             for page in pdf_reader.pages:
@@ -17,26 +17,19 @@ def read_file(file):
         except Exception as e:
             raise Exception(f"Error reading PDF file: {e}")
         
-    elif file.endswith('.txt'):
+    elif file.name.endswith('.txt'):
         return file.read().decode('utf-8')
 
     else:
         raise Exception("Unsupported file format, PDF and TXT files are supported")
 
 def get_table_data(quiz_str):
+    if not quiz_str or not isinstance(quiz_str, str):
+        raise ValueError("Input quiz_str is empty or not a string.")
+    
     try:
+        # Attempt to parse JSON
         quiz_dict = json.loads(quiz_str)
-        table_data = []
-        
-        for key, value in quiz_dict.items():
-            mcq=value["mcq"]
-            options=" || ".join(
-                [
-                    f"{option}-> {option_value}" for option, option_value in value["options"].items()
-                 
-                 ]
-            )
-
-    except Exception as e:
-        traceback.print_exc(type(e), e, e.__traceback__)
-        return False
+        return quiz_dict
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Invalid JSON: {e}")
